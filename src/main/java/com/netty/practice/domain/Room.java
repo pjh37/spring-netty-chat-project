@@ -13,10 +13,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Room {
-
+public class Room extends BaseTimeEntity{
     @Id
-    private String id;//UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String roomId;//UUID.randomUUID().toString();
 
     private String title;
 
@@ -25,7 +27,7 @@ public class Room {
 
     @Builder
     public Room(String title){
-        this.id=UUID.randomUUID().toString();
+        this.roomId=UUID.randomUUID().toString();
         this.title=title;
     }
 
