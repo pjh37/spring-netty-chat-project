@@ -28,6 +28,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.session:spring-session-data-redis'
@@ -38,5 +39,6 @@ dependencies {
     testCompile "org.projectlombok:lombok"
     annotationProcessor('org.projectlombok:lombok')
     testAnnotationProcessor('org.projectlombok:lombok')
+    testCompile('org.springframework.security:spring-security-test')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
