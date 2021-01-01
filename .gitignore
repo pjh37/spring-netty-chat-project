@@ -4,6 +4,6 @@
 .gradle
 out
 build
-
+/src/main/resoureces/application-oauth.yml
 
 /src/main/resources/application.yml
