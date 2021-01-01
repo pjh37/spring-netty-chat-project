@@ -1,5 +1,7 @@
 package com.netty.practice.config;
 
+import com.netty.practice.config.auth.CustomOAuth2UserService;
+import com.netty.practice.config.auth.GithubAuthenticationSuccessHandler;
 import com.netty.practice.config.auth.LoginFailHandler;
 import com.netty.practice.domain.User.UserRole;
 import com.netty.practice.service.UserService;
@@ -20,6 +22,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final GithubAuthenticationSuccessHandler githubAuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -49,7 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/**","/login/**","/css/**","/images/**","/js/**","/h2-console/**","/join/**").permitAll()
                 .antMatchers("/api/**").hasRole(UserRole.USER.name())
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                    .oauth2Login()
+                    .successHandler(githubAuthenticationSuccessHandler)
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService);
         http.formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
