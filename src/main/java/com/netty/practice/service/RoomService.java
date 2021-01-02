@@ -1,5 +1,6 @@
 package com.netty.practice.service;
 
+import com.netty.practice.domain.Message;
 import com.netty.practice.domain.Room;
 import com.netty.practice.domain.dto.ChatLogSendReqDto;
 import com.netty.practice.domain.dto.RoomCreateReqDto;
@@ -23,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,9 +47,13 @@ public class RoomService {
 
     public void addUser(Channel channel,Object body){
         RoomEnterReqDto roomEnterReqDto=MapperUtil.readValueOrThrow(body,RoomEnterReqDto.class);
+        log.info(roomEnterReqDto.getUsername());
+        log.info(roomEnterReqDto.getRoomId());
+
         roomManager.getRoomManager().get(roomEnterReqDto.getRoomId()).add(channel);
     }
 
+    @Transactional
     public List<RoomListResDto> findPagingRoom(int page){
         Pageable pageable= PageRequest.of(page-1,PAGE_SIZE, Sort.by("id").descending());
         return roomRepository.findPagingRoom(pageable)
@@ -59,18 +65,27 @@ public class RoomService {
         roomManager.getRoomManager().get(roomId).remove(channel);
     }
 
+    @Transactional
     public void sendBroadcast(Object body){
         ChatLogSendReqDto chatLogSendReqDto=MapperUtil.readValueOrThrow(body,ChatLogSendReqDto.class);
         roomManager.getRoomManager().get(chatLogSendReqDto.getRoomId()).writeAndFlush(MapperUtil.returnMessage(body));
+        save(chatLogSendReqDto);
     }
 
-    public List<Integer> getPageList(int page){
+    @Transactional
+    public void save(ChatLogSendReqDto chatLogSendReqDto){
+        Room room=roomRepository.findByRoomId(chatLogSendReqDto.getRoomId());
+        Message message=Message.builder().message(chatLogSendReqDto.getContent()).build();
+        message.setRoom(room);
+        room.addMessage(message);
+    }
+
+    public List<Integer> getPageList(int page,Long totalCount){
         List<Integer> pageList=new ArrayList<>();
-        Double postTotalCount=Double.valueOf(getPageCount());
+        Double postTotalCount=Double.valueOf(totalCount);
 
         //총 게시글 기준 올림
         int totalLastPageNum=(int)(Math.ceil((postTotalCount/PAGE_SIZE)));
-
         int blockLastPageNum=0;
         if(page<=3){
             page=1;
@@ -79,15 +94,17 @@ public class RoomService {
             page=page-2;
             blockLastPageNum=Math.min(totalLastPageNum, page + BLOCK_PAGE_SIZE);
         }
-
-
         for(int val=page,idx=0;val<=blockLastPageNum;val++,idx++){
             pageList.add(val);
         }
         return pageList;
     }
 
-    private Long getPageCount(){
-        return roomRepository.count();
+    @Transactional
+    public Long getTotalPageCount(Long totalCount){
+        if(totalCount==1){
+            return roomRepository.count();
+        }
+        return totalCount;
     }
 }
