@@ -21,10 +21,10 @@ public class SessionUser implements Serializable {
     private UserRole role;
 
     @Builder
-    public SessionUser(Long id,String name,String email,UserRole role){
-        this.id=id;
-        this.name=name;
-        this.email=email;
-        this.role=role;
+    public SessionUser(User user){
+        this.id=user.getId();
+        this.name=user.getName();
+        this.email=user.getEmail();
+        this.role=user.getRole();
     }
 }

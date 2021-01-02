@@ -9,5 +9,7 @@ import java.util.Collections;
 public class UserAccount extends User {
     public UserAccount(String email,String password,UserRole role){
         super(email,password,Arrays.asList(new SimpleGrantedAuthority("ROLE_"+role.getKey())));
+        System.out.println("UserAccount: "+email);
+        System.out.println("UserAccount: "+password);
     }
 }
