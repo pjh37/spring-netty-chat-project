@@ -1,14 +1,12 @@
 package com.netty.practice.domain;
 
+import com.netty.practice.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @NoArgsConstructor
 @Getter
@@ -25,6 +23,9 @@ public class Room extends BaseTimeEntity{
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User> users;
 
+    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages;
+
     @Builder
     public Room(String title){
         this.roomId=UUID.randomUUID().toString();
@@ -37,5 +38,9 @@ public class Room extends BaseTimeEntity{
 
     public void removeUser(User user){
         users.remove(user);
+    }
+
+    public void addMessage(Message message){
+        messages.add(message);
     }
 }
