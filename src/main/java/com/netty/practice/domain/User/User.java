@@ -1,7 +1,7 @@
 package com.netty.practice.domain.User;
 
 import com.netty.practice.domain.BaseTimeEntity;
-import com.netty.practice.domain.Room;
+import com.netty.practice.domain.Room.Room;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

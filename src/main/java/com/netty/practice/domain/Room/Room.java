@@ -1,5 +1,7 @@
-package com.netty.practice.domain;
+package com.netty.practice.domain.Room;
 
+import com.netty.practice.domain.BaseTimeEntity;
+import com.netty.practice.domain.Chat.Message;
 import com.netty.practice.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import java.util.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class Room extends BaseTimeEntity{
+public class Room extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,6 +1,6 @@
-package com.netty.practice.repository;
+package com.netty.practice.domain.Room;
 
-import com.netty.practice.domain.Room;
+import com.netty.practice.domain.Room.Room;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,6 @@
 package com.netty.practice.domain.dto;
 
-import com.netty.practice.domain.Command;
-import com.netty.practice.domain.Room;
+import com.netty.practice.domain.Room.Room;
 import lombok.Getter;
 
 @Getter
