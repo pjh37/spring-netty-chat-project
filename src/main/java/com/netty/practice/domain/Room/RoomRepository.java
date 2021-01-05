@@ -11,5 +11,5 @@ public interface RoomRepository extends JpaRepository<Room,String> {
     @Query("select r from Room r")
     List<Room> findPagingRoom(Pageable pageable);
 
-    Room findByRoomId(String roomId);
+
 }

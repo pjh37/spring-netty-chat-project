@@ -15,22 +15,19 @@ import java.util.*;
 @Entity
 public class Room extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String roomId;//UUID.randomUUID().toString();
+    private String id;//UUID.randomUUID().toString();
 
     private String title;
 
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User> users;
 
-    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room",fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 
     @Builder
     public Room(String title){
-        this.roomId=UUID.randomUUID().toString();
+        this.id=UUID.randomUUID().toString();
         this.title=title;
     }
 
