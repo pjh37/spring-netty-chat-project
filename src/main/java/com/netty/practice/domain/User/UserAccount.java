@@ -2,14 +2,20 @@ package com.netty.practice.domain.User;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.User;
+import com.netty.practice.domain.User.*;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class UserAccount extends User {
-    public UserAccount(String email,String password,UserRole role){
-        super(email,password,Arrays.asList(new SimpleGrantedAuthority("ROLE_"+role.getKey())));
-        System.out.println("UserAccount: "+email);
-        System.out.println("UserAccount: "+password);
+public class UserAccount extends org.springframework.security.core.userdetails.User {
+    private User user;
+    public UserAccount(User user){
+        super(user.getName(),user.getPassword(),Arrays.asList(new SimpleGrantedAuthority("ROLE_"+user.getRole())));
+        this.user=user;
+        System.out.println("UserAccount: "+user.getName());
+        System.out.println("UserAccount: "+user.getPassword());
+    }
+
+    public User getUser() {
+        return user;
     }
 }
