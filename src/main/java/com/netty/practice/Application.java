@@ -1,6 +1,7 @@
 package com.netty.practice;
 
 import com.netty.practice.server.NettyServer;
+import com.netty.practice.util.DummyData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
