@@ -1,17 +1,15 @@
 package com.netty.practice.service;
 
-import com.netty.practice.domain.Message;
-import com.netty.practice.domain.Room;
+import com.netty.practice.domain.Chat.Message;
+import com.netty.practice.domain.Room.Room;
 import com.netty.practice.domain.dto.ChatLogSendReqDto;
 import com.netty.practice.domain.dto.RoomCreateReqDto;
 import com.netty.practice.domain.dto.RoomEnterReqDto;
 import com.netty.practice.domain.dto.RoomListResDto;
-import com.netty.practice.repository.RoomRepository;
+import com.netty.practice.domain.Room.RoomRepository;
 import com.netty.practice.util.MapperUtil;
 import com.netty.practice.util.RoomManager;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelId;
-import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +36,7 @@ public class RoomService {
     public void create(Object body){
         RoomCreateReqDto roomCreateReqDto=MapperUtil.readValueOrThrow(body,RoomCreateReqDto.class);
         Room room=roomRepository.save(roomCreateReqDto.toEntity());
-        roomManager.getRoomManager().put(room.getRoomId(),new DefaultChannelGroup(GlobalEventExecutor.INSTANCE));
+        roomManager.getRoomManager().put(room.getId(),new DefaultChannelGroup(GlobalEventExecutor.INSTANCE));
     }
 
     public void addUser(Channel channel,Object body){
@@ -55,7 +49,7 @@ public class RoomService {
 
     @Transactional
     public List<RoomListResDto> findPagingRoom(int page){
-        Pageable pageable= PageRequest.of(page-1,PAGE_SIZE, Sort.by("id").descending());
+        Pageable pageable= PageRequest.of(page-1,PAGE_SIZE, Sort.by("createDate").descending());
         return roomRepository.findPagingRoom(pageable)
                 .stream()
                 .map(RoomListResDto::new).collect(Collectors.toList());
@@ -74,8 +68,12 @@ public class RoomService {
 
     @Transactional
     public void save(ChatLogSendReqDto chatLogSendReqDto){
-        Room room=roomRepository.findByRoomId(chatLogSendReqDto.getRoomId());
-        Message message=Message.builder().message(chatLogSendReqDto.getContent()).build();
+        Room room=roomRepository.findById(chatLogSendReqDto.getRoomId())
+                .orElseThrow(()->new IllegalArgumentException("맞는 방이 없습니다."));
+        Message message=Message.builder()
+                .username(chatLogSendReqDto.getUsername())
+                .message(chatLogSendReqDto.getContent())
+                .build();
         message.setRoom(room);
         room.addMessage(message);
     }

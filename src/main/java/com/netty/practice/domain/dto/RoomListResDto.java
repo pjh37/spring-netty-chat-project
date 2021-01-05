@@ -13,7 +13,7 @@ public class RoomListResDto implements Serializable {
     private String title;
 
     public RoomListResDto(Room room) {
-        this.roomId = room.getRoomId();
+        this.roomId = room.getId();
         this.title = room.getTitle();
     }
 }
