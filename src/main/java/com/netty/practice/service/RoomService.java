@@ -36,15 +36,13 @@ public class RoomService {
     public void create(Object body){
         RoomCreateReqDto roomCreateReqDto=MapperUtil.readValueOrThrow(body,RoomCreateReqDto.class);
         Room room=roomRepository.save(roomCreateReqDto.toEntity());
-        roomManager.getRoomManager().put(room.getId(),new DefaultChannelGroup(GlobalEventExecutor.INSTANCE));
+        roomManager.roomCreate(room.getId(),new DefaultChannelGroup(GlobalEventExecutor.INSTANCE));
     }
 
     public void addUser(Channel channel,Object body){
         RoomEnterReqDto roomEnterReqDto=MapperUtil.readValueOrThrow(body,RoomEnterReqDto.class);
-        log.info(roomEnterReqDto.getUsername());
-        log.info(roomEnterReqDto.getRoomId());
-
-        roomManager.getRoomManager().get(roomEnterReqDto.getRoomId()).add(channel);
+        assert roomEnterReqDto != null;
+        roomManager.addUser(roomEnterReqDto.getRoomId(),channel);
     }
 
     @Transactional
@@ -62,7 +60,8 @@ public class RoomService {
     @Transactional
     public void sendBroadcast(Object body){
         ChatLogSendReqDto chatLogSendReqDto=MapperUtil.readValueOrThrow(body,ChatLogSendReqDto.class);
-        roomManager.getRoomManager().get(chatLogSendReqDto.getRoomId()).writeAndFlush(MapperUtil.returnMessage(body));
+        assert chatLogSendReqDto != null;
+        roomManager.sendBroadcast(chatLogSendReqDto.getRoomId(),body);
         save(chatLogSendReqDto);
     }
 

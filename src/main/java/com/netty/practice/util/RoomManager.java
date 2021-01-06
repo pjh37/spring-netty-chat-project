@@ -27,4 +27,25 @@ public class RoomManager {
     public Map<String,ChannelGroup> getRoomManager(){
         return rooms;
     }
+
+    public ChannelGroup getRoom(String roomId){
+        if(roomId==null){
+            throw new NullPointerException("roomId is not exist");
+        }
+        return rooms.get(roomId);
+    }
+
+    public void sendBroadcast(String roomId,Object body){
+        getRoom(roomId).parallelStream()
+                .filter(Channel::isOpen)
+                .forEach(channel -> channel.writeAndFlush(MapperUtil.returnMessage(body)));
+    }
+
+    public boolean addUser(String roomId,Channel channel){
+        return getRoom(roomId).add(channel);
+    }
+
+    public ChannelGroup roomCreate(String roomId,ChannelGroup channelGroup){
+        return rooms.put(roomId,channelGroup);
+    }
 }
