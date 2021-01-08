@@ -7,6 +7,7 @@ import com.netty.practice.domain.User.SessionUser;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.security.core.Authentication;
@@ -31,11 +32,14 @@ public class GithubAuthenticationSuccessHandler implements AuthenticationSuccess
     private final HttpSession httpSession;
     private final ObjectMapper objectMapper;
 
+    @Value("${baseUrl}")
+    private String baseUrl;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SessionUser sessionUser=(SessionUser)request.getSession().getAttribute("user");
         response.addCookie(new Cookie("username",sessionUser.getName()));
-        response.sendRedirect("http://localhost:3000/login/oauth2/code/github");
+        response.sendRedirect(baseUrl+"/login/oauth2/code/github");
     }
 
 
