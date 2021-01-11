@@ -17,6 +17,7 @@ public class OAuthAttributes {
     private String email;
     private String picture;
 
+
     @Builder
     public OAuthAttributes(Map<String,Object> attributes,String nameAttributeKey,String name,String email,String picture){
         this.attributes=attributes;
@@ -29,7 +30,8 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId,String userNameAttributeName,Map<String,Object> attributes){
         log.info("registrationId: "+registrationId);
         log.info("userNameAttributeName: "+userNameAttributeName);
-        if("github".equals(registrationId)){
+
+        if(OAuthRegistration.GITHUB.registrationId.equals(registrationId)){
             return  ofGithub(userNameAttributeName,attributes);
         }
         return ofGoogle(userNameAttributeName, attributes);
@@ -46,9 +48,6 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes ofGithub(String userNameAttributeName,Map<String,Object> attributes){
-//        attributes.forEach((key,value)->{
-//            log.info("key: "+key+" value: "+value.toString());
-//        });
         return OAuthAttributes.builder()
                 .name((String)attributes.get("login"))
                 .email((String)attributes.get("url"))

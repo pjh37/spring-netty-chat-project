@@ -2,7 +2,7 @@ package com.netty.practice.config;
 
 import com.netty.practice.config.auth.CustomLogoutSuccessHandler;
 import com.netty.practice.config.auth.CustomOAuth2UserService;
-import com.netty.practice.config.auth.GithubAuthenticationSuccessHandler;
+import com.netty.practice.config.auth.CustomAuthenticationSuccessHandler;
 import com.netty.practice.config.auth.LoginFailHandler;
 import com.netty.practice.domain.User.UserRole;
 import com.netty.practice.service.UserService;
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
-    private final GithubAuthenticationSuccessHandler githubAuthenticationSuccessHandler;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Value("${baseUrl}")
     private String baseUrl;
@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .deleteCookies("JSESSIONID")
                 .and()
                     .oauth2Login()
-                    .successHandler(githubAuthenticationSuccessHandler)
+                    .successHandler(customAuthenticationSuccessHandler)
                     .userInfoEndpoint()
                     .userService(customOAuth2UserService);
         http.formLogin()
