@@ -32,13 +32,16 @@ public class RoomManager {
         if(roomId==null){
             throw new NullPointerException("roomId is not exist");
         }
+
         return rooms.get(roomId);
     }
 
     public void sendBroadcast(String roomId,Object body){
-        getRoom(roomId).parallelStream()
-                .filter(Channel::isOpen)
-                .forEach(channel -> channel.writeAndFlush(MapperUtil.returnMessage(body)));
+        getRoom(roomId).writeAndFlush(MapperUtil.returnMessage(body));
+        //chaneelgroup으로 한번에 보내기
+//        getRoom(roomId).parallelStream()
+//                .filter(Channel::isOpen)
+//                .forEach(channel -> channel.writeAndFlush(MapperUtil.returnMessage(body)));
     }
 
     public boolean addUser(String roomId,Channel channel){
