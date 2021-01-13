@@ -29,9 +29,6 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    private final HttpSession httpSession;
-    private final ObjectMapper objectMapper;
-
     @Value("${baseUrl}")
     private String baseUrl;
 
@@ -45,6 +42,4 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.addCookie(new Cookie("username",userName));
         response.sendRedirect(baseUrl+"/login/oauth2/code/"+request.getSession().getAttribute("registrationId"));
     }
-
-
 }
