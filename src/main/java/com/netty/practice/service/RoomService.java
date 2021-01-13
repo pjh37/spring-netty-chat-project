@@ -1,6 +1,6 @@
 package com.netty.practice.service;
 
-import com.netty.practice.domain.Chat.Message;
+import com.netty.practice.domain.chat.Message;
 import com.netty.practice.domain.Room.Room;
 import com.netty.practice.domain.dto.ChatLogSendReqDto;
 import com.netty.practice.domain.dto.RoomCreateReqDto;

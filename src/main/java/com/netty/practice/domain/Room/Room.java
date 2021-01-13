@@ -1,7 +1,7 @@
 package com.netty.practice.domain.Room;
 
 import com.netty.practice.domain.BaseTimeEntity;
-import com.netty.practice.domain.Chat.Message;
+import com.netty.practice.domain.chat.Message;
 import com.netty.practice.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
