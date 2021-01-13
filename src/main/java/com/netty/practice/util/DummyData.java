@@ -1,14 +1,15 @@
 package com.netty.practice.util;
 
-import com.netty.practice.domain.Chat.ChatRepository;
-import com.netty.practice.domain.Chat.Message;
+import com.netty.practice.domain.board.Board;
+import com.netty.practice.domain.board.BoardRepository;
+import com.netty.practice.domain.chat.ChatRepository;
+import com.netty.practice.domain.chat.Message;
 import com.netty.practice.domain.Room.Room;
 import com.netty.practice.domain.Room.RoomRepository;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
@@ -17,6 +18,7 @@ import javax.annotation.PostConstruct;
 public class DummyData {
     private final RoomRepository roomRepository;
     private final ChatRepository chatRepository;
+    private final BoardRepository boardRepository;
     private final RoomManager roomManager;
 
     @PostConstruct
@@ -40,5 +42,13 @@ public class DummyData {
             message.setRoom(room);
             chatRepository.save(message);
         }
+        for(int i=0;i<200;i++){
+            boardRepository.save(Board.builder()
+                    .title("테스트 타이틀 "+i)
+                    .author("홍길동")
+                    .content("안녕하세요 테스트 글입니다.")
+                    .build());
+        }
+
     }
 }
